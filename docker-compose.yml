@@ -1,0 +1,31 @@
+services:
+  postgres_jordan:
+    image: postgres:15
+    container_name: postgres_jordan
+    env_file:
+      - .env
+    ports:
+      - "22102:5432"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+    networks:
+      - uts_network
+
+  pgadmin_jordan:
+    image: dpage/pgadmin4
+    container_name: pgadmin_Jordan
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pg.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "44102:80"
+    volumes:
+      - ./pgadmin_data:/var/lib/pgadmin   # ⬅️ baris ini WAJIB
+    depends_on:
+      - postgres_jordan
+    networks:
+      - uts_network
+
+networks:
+  uts_network:
